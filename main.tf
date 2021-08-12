@@ -122,3 +122,23 @@ resource "aws_route_table" "privte_rt" {
 	  "Name" = "private_rt"
 	}
 }
+# Creating the security group for private 
+resource "aws_security_group" "private_sg" {
+	name        = "allow_ssh"
+          description = "Allow _ssh"
+          vpc_id = aws_vpc.vpc.id
+
+          ingress {
+             description = "SSH"
+             from_port = 22
+             to_port   = 22
+             protocol = "tcp"
+             cidr_blocks = ["aws_security_group.allow_tls"]
+          }
+          egress {
+            from_port = 0
+            to_port = 0
+            protocol = "-1"
+            cidr_blocks = ["0.0.0.0/0"]
+       }
+}
