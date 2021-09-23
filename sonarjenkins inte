@@ -1,29 +1,25 @@
-pipeline{
+pipeline {
     agent any
-    environment {
-        PATH = "$PATH:/usr/share/maven/bin"
+    environment{
+    PATH = "$PATH: /usr/share/maven/bin/"
     }
-    stages{
-       stage('GetCode'){
+    stages {
+        stage ('Get code') {
             steps{
-                git branch: 'post-qa', url: 'https://github.com/ravi2krishna/JavaCalculator.git'
+             git 'https://github.com/ravi2krishna/JavaCalculator.git'
             }
-         }        
-       stage('Build'){
+        }
+        stage ('Build') {
             steps{
                 sh 'mvn clean package'
             }
-         }
-        stage('SonarQube analysis') {
-//    def scannerHome = tool 'SonarScanner 4.0';
-        steps{
-        withSonarQubeEnv('sonarqube') { 
-        // If you have configured more than one global server connection, you can specify its name
-//      sh "${scannerHome}/bin/sonar-scanner"
-        sh "mvn sonar:sonar"
-    }
         }
+        stage ('Sonar alanalysis'){
+            steps{
+            withSonarQubeEnv('sonarqube'){
+                sh 'mvn sonar:sonar'
+            }
+            }
         }
-       
     }
 }
